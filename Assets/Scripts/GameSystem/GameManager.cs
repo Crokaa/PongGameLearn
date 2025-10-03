@@ -5,12 +5,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    [SerializeField] GameObject ball;
-    [SerializeField] TextMeshProUGUI playerScoreText;
-    [SerializeField] TextMeshProUGUI enemyScoreText;
+    [SerializeField] GameObject _ball;
+    [SerializeField] TextMeshProUGUI _playerScoreText;
+    [SerializeField] TextMeshProUGUI _enemyScoreText;
     public static GameManager instance;
     private PlayerController _player;
-    private EnemyController _enemy;
+    private EnemyBehaviour _enemy;
     void Awake()
     {
         if (instance == null)
@@ -21,21 +21,22 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        ball.GetComponent<BallBehaviour>().Launch(enemy: Random.Range(0, 2) == 0);
+        _ball.GetComponent<BallBehaviour>().Launch(Random.Range(0, 1) == 0 ? -1 : 1);
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        _enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyController>();
-        playerScoreText.text = _player.Score.ToString();
-        enemyScoreText.text = _enemy.Score.ToString();
+        _enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyBehaviour>();
+        _playerScoreText.text = _player.Score.ToString();
+        _enemyScoreText.text = _enemy.Score.ToString();
     }
 
-    public void OnGoalScored()
+    public void OnGoalScored(GameObject characterThatScores)
     {
-        ball.SetActive(false);
-        
-        playerScoreText.text = _player.Score.ToString();
-        enemyScoreText.text = _enemy.Score.ToString();
+        _ball.SetActive(false);
 
-        StartCoroutine(ball.GetComponent<BallBehaviour>().ResetBall());
+        _playerScoreText.text = _player.Score.ToString();
+        _enemyScoreText.text = _enemy.Score.ToString();
+
+
+        StartCoroutine(_ball.GetComponent<BallBehaviour>().ResetBall(- characterThatScores.transform.position.x));
     }
-    
+
 }

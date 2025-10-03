@@ -29,4 +29,8 @@ public class PlayerController : MonoBehaviour, ICharacter
         Score++;
     }
 
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        //TODO: check where the ball hit the character to throw it in a different direction
+    }
 }

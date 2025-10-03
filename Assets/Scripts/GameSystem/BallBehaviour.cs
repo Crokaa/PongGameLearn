@@ -2,10 +2,10 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BallBehaviour: MonoBehaviour
+public class BallBehaviour : MonoBehaviour
 {
-    Rigidbody2D _rb;
-    public float speed = 3f;
+    private Rigidbody2D _rb;
+    [SerializeField] private float _speed;
 
     void Awake()
     {
@@ -16,43 +16,38 @@ public class BallBehaviour: MonoBehaviour
     void FixedUpdate()
     {
         // Keep the ball speed constant
-        _rb.linearVelocity = _rb.linearVelocity.normalized * speed;
+        if (gameObject.activeSelf)
+            _rb.linearVelocity = _rb.linearVelocity.normalized * _speed;
     }
 
-    public void Launch(bool enemy = false)
+    // This is cleaner than passing a bool, the ball doesn't need to know the concept of player or enemy
+    public void Launch(float directionX)
     {
+
         Vector2 direction;
-        float directionX = Random.Range(0, 1f);
-        float directionY = Random.Range(-1f, 1f);
+        // Even if directionX is -1 range swaps the values
+        float randomX = Random.Range(0f, directionX);
+        float randomY = Random.Range(-1f, 1f);
 
-        if (enemy)
-        {
-            direction = new Vector2(-directionX, directionY).normalized;
-        }
-        else
-        {
-            direction = new Vector2(directionX, directionY).normalized;
-        }
+        direction = new Vector2(randomX, randomY).normalized;
 
-
-        _rb.linearVelocity = direction * speed;
+        _rb.linearVelocity = direction * _speed;
     }
 
-    public IEnumerator ResetBall()
+    public IEnumerator ResetBall(float directionX)
     {
         _rb.linearVelocity = Vector2.zero;
         transform.position = Vector2.zero;
 
-        //yield return new WaitForSeconds(1f);
-        
+        yield return new WaitForSeconds(1f);
+
         //Object will be invisible after a goal so I have to make it visible again
         gameObject.SetActive(true);
 
         // Wait for a second before relaunching the ball
         yield return new WaitForSeconds(1f);
 
-        // #TODO: The ball will be thrown towards the player who conceded the goal
-        Launch(Random.Range(0, 2) == 0);
+        Launch(directionX);
     }
 
 }

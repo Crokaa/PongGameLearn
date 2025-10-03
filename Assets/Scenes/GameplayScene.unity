@@ -185,7 +185,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8253380249184618810, guid: baf26cb2f1d8ed748abff8e204c653a3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2085148786}
+      addedObject: {fileID: 2085148790}
   m_SourcePrefab: {fileID: 100100000, guid: baf26cb2f1d8ed748abff8e204c653a3, type: 3}
 --- !u!1 &519420028
 GameObject:
@@ -578,9 +578,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c281c03694a9e4c85132e2071474ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  ball: {fileID: 1131854789}
-  playerScoreText: {fileID: 1138134319}
-  enemyScoreText: {fileID: 2007312631}
+  _ball: {fileID: 1131854789}
+  _playerScoreText: {fileID: 1138134319}
+  _enemyScoreText: {fileID: 2007312631}
 --- !u!1 &983281826
 GameObject:
   m_ObjectHideFlags: 0
@@ -1253,7 +1253,7 @@ GameObject:
   - component: {fileID: 1783300924}
   - component: {fileID: 1783300923}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: ScoreBoardCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1606,7 +1606,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7711204979561058862, guid: baf26cb2f1d8ed748abff8e204c653a3, type: 3}
   m_PrefabInstance: {fileID: 5537467}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2085148786
+--- !u!114 &2085148790
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1618,7 +1618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96234de7687acf841851e846a08adf71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  speed: 10
+  _speed: 10
 --- !u!1001 &2104032002
 PrefabInstance:
   m_ObjectHideFlags: 0
