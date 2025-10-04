@@ -1,18 +1,8 @@
-using System.Linq.Expressions;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour, ICharacter
+public class PlayerController : Character
 {
-    [SerializeField] private float _speed;
     private float _moveVertical;
-    private Rigidbody2D _rb;
-    public int Score { get; private set; }
-
-    void Awake()
-    {
-        _rb = GetComponent<Rigidbody2D>();
-        Score = 0;
-    }
 
     void Update()
     {
@@ -23,14 +13,5 @@ public class PlayerController : MonoBehaviour, ICharacter
     {
         _rb.linearVelocity = new Vector2(0, _moveVertical * _speed);
     }
-    
-    public void ScoreGoal()
-    {
-        Score++;
-    }
 
-    public void OnCollisionEnter2D(Collision2D collision)
-    {
-        //TODO: check where the ball hit the character to throw it in a different direction
-    }
 }
