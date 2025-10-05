@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        _ball.GetComponent<BallBehaviour>().Launch(Random.Range(0, 1) == 0 ? -1 : 1);
+        _ball.GetComponent<BallBehaviour>().Launch(Random.Range(0, 2) == 0 ? -1 : 1);
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         _enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyBehaviour>();
         _playerScoreText.text = _player.Score.ToString();
@@ -35,8 +35,8 @@ public class GameManager : MonoBehaviour
         _playerScoreText.text = _player.Score.ToString();
         _enemyScoreText.text = _enemy.Score.ToString();
 
-
-        StartCoroutine(_ball.GetComponent<BallBehaviour>().ResetBall(- characterThatScores.transform.position.x));
+        // Relaunch the ball towards the character that suffered the goal
+        StartCoroutine(_ball.GetComponent<BallBehaviour>().ResetBall((int) characterThatScores.transform.right.x));
     }
 
 }
