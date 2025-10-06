@@ -1639,6 +1639,10 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -2986583251727886956, guid: baf26cb2f1d8ed748abff8e204c653a3, type: 3}
+      propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 138869513716879880, guid: baf26cb2f1d8ed748abff8e204c653a3, type: 3}
       propertyPath: m_FlipX
       value: 0
@@ -1653,7 +1657,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7711204979561058862, guid: baf26cb2f1d8ed748abff8e204c653a3, type: 3}
       propertyPath: m_LocalScale.x
-      value: -0.3
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7711204979561058862, guid: baf26cb2f1d8ed748abff8e204c653a3, type: 3}
       propertyPath: m_LocalPosition.x
