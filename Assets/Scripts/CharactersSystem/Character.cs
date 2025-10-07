@@ -12,7 +12,7 @@ public class Character : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         Score = 0;
         _paddleHeight = GetComponent<SpriteRenderer>().size.y * transform.localScale.y;
-        _paddleWidth = GetComponent<SpriteRenderer>().size.y * transform.localScale.x;
+        _paddleWidth = GetComponent<SpriteRenderer>().size.x * transform.localScale.x;
     }
     public void ScoreGoal()
     {
