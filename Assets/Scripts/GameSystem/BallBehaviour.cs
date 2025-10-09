@@ -40,14 +40,17 @@ public class BallBehaviour : MonoBehaviour
         _rb.linearVelocity = direction * _currentSpeed;
     }
 
-    //public void 
-
-    public IEnumerator ResetBall(int directionX)
+    public void ResetBallPosition()
     {
         _rb.linearVelocity = Vector2.zero;
         transform.position = Vector2.zero;
 
         _currentSpeed = _initialSpeed;
+    }
+
+    public IEnumerator ResetBall(int directionX)
+    {
+        ResetBallPosition();
 
         yield return _waitOneSecond;
 

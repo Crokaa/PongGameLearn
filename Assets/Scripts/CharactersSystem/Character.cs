@@ -7,16 +7,25 @@ public class Character : MonoBehaviour
     public int Score { get; private set; }
     private float _paddleHeight;
     private float _paddleWidth;
+    private float _initialYPosition;
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         Score = 0;
         _paddleHeight = GetComponent<SpriteRenderer>().size.y * transform.localScale.y;
         _paddleWidth = GetComponent<SpriteRenderer>().size.x * transform.localScale.x;
+        _initialYPosition = transform.position.y;
     }
+
     public void ScoreGoal()
     {
         Score++;
+    }
+
+    public void Reset()
+    {
+        Score = 0;
+        transform.position = new Vector3(transform.position.x, _initialYPosition, transform.position.z);
     }
     void OnCollisionEnter2D(Collision2D collision)
     {

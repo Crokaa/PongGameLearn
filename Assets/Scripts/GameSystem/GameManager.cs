@@ -5,18 +5,18 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-
-    [SerializeField] GameObject _ball;
-    [SerializeField] GameObject _menuUI;
-    [SerializeField] GameObject _scoreBoardUI;
-    [SerializeField] GameObject _gameLayoutObject;
-    [SerializeField] GameObject _gameOverUI;
-    [SerializeField] Texture _winImage;  
-    [SerializeField] Texture _loseImage;  
-    private PlayerController _player;
-    private EnemyBehaviour _enemy;
+    [SerializeField] private GameObject _ball;
+    [SerializeField] private GameObject _menuUI;
+    [SerializeField] private GameObject _scoreBoardUI;
+    [SerializeField] private GameObject _gameLayoutObject;
+    [SerializeField] private GameObject _gameOverUI;
+    [SerializeField] private Texture _winImage;
+    [SerializeField] private Texture _loseImage;
+    [SerializeField] private PlayerController _player;
+    [SerializeField] private EnemyBehaviour _enemy;
     private TextMeshProUGUI _playerScoreText;
     private TextMeshProUGUI _enemyScoreText;
+    private EnemyDifficulty _currentDifficulty;
     public static GameManager instance;
     private static readonly int GOALSTOWIN = 7;
     void Awake()
@@ -25,37 +25,13 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-    }
 
-    void Start()
-    {   
-        // Canvas activation/deactivation so it doesn't matter if it's on/off in inspector
-        _menuUI.SetActive(true);
-        _scoreBoardUI.SetActive(false);
-        _gameLayoutObject.SetActive(false);
-        _gameOverUI.SetActive(false);
-
-        Button[] buttons = _menuUI.GetComponentsInChildren<Button>();
-        foreach (Button button in buttons)
+        Button[] menuButtons = _menuUI.GetComponentsInChildren<Button>();
+        foreach (Button button in menuButtons)
         {
             button.onClick.AddListener(() => StartCoroutine(GameStart((EnemyDifficulty)System.Enum.Parse(typeof(EnemyDifficulty), button.GetComponentInChildren<TextMeshProUGUI>().text))));
         }
-    }
 
-    IEnumerator GameStart(EnemyDifficulty difficulty)
-    {
-
-        // Canvas activation/deactivation
-        _menuUI.SetActive(false);
-        _scoreBoardUI.SetActive(true);
-        _gameLayoutObject.SetActive(true);
-
-        // Set up references to player and enemy
-        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        _enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyBehaviour>();
-        _enemy.SetDifficulty(difficulty);
-
-        // This could be achieved with SerializeField, but this way I got only the canvas as SerializeField and activate anything else from it
         TextMeshProUGUI[] scoreBoardText = _scoreBoardUI.GetComponentsInChildren<TextMeshProUGUI>();
         foreach (TextMeshProUGUI scoreBoardObj in scoreBoardText)
         {
@@ -65,13 +41,40 @@ public class GameManager : MonoBehaviour
                 _enemyScoreText = scoreBoardObj;
         }
 
-        //Set up the score UI
+        Button[] gameOverButtons = _gameOverUI.GetComponentsInChildren<Button>();
+        foreach (Button button in gameOverButtons)
+        {
+            if (button.name == "RetryButton")
+                button.onClick.AddListener(() => StartCoroutine(GameStart(_currentDifficulty)));
+            else if (button.name == "MainMenuButton")
+                button.onClick.AddListener(ShowMenu);
+        }
+    }
+
+    void Start()
+    {
+        ShowMenu();
+    }
+
+    IEnumerator GameStart(EnemyDifficulty difficulty)
+    {
+        _player.Reset();
+        _enemy.Reset();
+
+        // Even if it's the same difficulty I will update it (this isn't a heavy operation)
+        _enemy.SetDifficulty(difficulty);
+        _currentDifficulty = difficulty;
+
+        // Set up the score UI
         _playerScoreText.text = _player.Score.ToString();
         _enemyScoreText.text = _enemy.Score.ToString();
 
-        // Launch the ball
+        ShowGame();
+
         yield return new WaitForSeconds(1f);
-        _ball.GetComponent<BallBehaviour>().Launch(Random.Range(0, 2) == 0 ? -1 : 1);
+
+        // Launch the ball
+        _ball.GetComponent<BallBehaviour>().Launch(Random.Range(0, 2) == 0? -1 : 1);
     }
 
     public void OnGoalScored(GameObject characterThatScores)
@@ -88,9 +91,8 @@ public class GameManager : MonoBehaviour
         else
         {
             // Relaunch the ball towards the character that suffered the goal
-            StartCoroutine(_ball.GetComponent<BallBehaviour>().ResetBall((int) characterThatScores.transform.right.x));
+            StartCoroutine(_ball.GetComponent<BallBehaviour>().ResetBall((int)characterThatScores.transform.right.x));
         }
-
     }
 
     private void GameOver()
@@ -121,6 +123,32 @@ public class GameManager : MonoBehaviour
             enemyImage.texture = _winImage;
         }
 
+        ShowGameOver();
+    }
+
+    private void ShowMenu()
+    {
+        _scoreBoardUI.SetActive(false);
+        _gameLayoutObject.SetActive(false);
+        _gameOverUI.SetActive(false);
+        _menuUI.SetActive(true);
+    }
+
+    private void ShowGame()
+    {
+        _menuUI.SetActive(false);
+        _gameOverUI.SetActive(false);
+        _scoreBoardUI.SetActive(true);
+        _gameLayoutObject.SetActive(true);
+
+        // Since this is also part of UI it makes sense to be in this fuction
+        _ball.GetComponent<BallBehaviour>().ResetBallPosition();
+        _ball.SetActive(true);
+    }
+
+    private void ShowGameOver()
+    {
         _gameOverUI.SetActive(true);
     }
+
 }

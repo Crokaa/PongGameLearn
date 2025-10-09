@@ -4,9 +4,9 @@ public class EnemyBehaviour : Character
 {
     private GameObject _ball;
     private float _ballYPos;
-    private static float EASYSPEED = 5f;
-    private static float MEDIUMSPEED = 8f;
-    private static float HARDSPEED = 12f;
+    private static readonly float EASYSPEED = 5f;
+    private static readonly float MEDIUMSPEED = 8f;
+    private static readonly float HARDSPEED = 12f;
     void Start()
     {
         _ball = GameObject.FindWithTag("Ball");
