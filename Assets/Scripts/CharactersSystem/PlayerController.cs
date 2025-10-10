@@ -6,12 +6,14 @@ public class PlayerController : Character
 
     void Update()
     {
-        _moveVertical = Input.GetAxis("Vertical");
+        if (canMove)
+            _moveVertical = Input.GetAxis("Vertical");
     }
 
     void FixedUpdate()
     {
-        _rb.linearVelocity = new Vector2(0, _moveVertical * _speed);
+        if (canMove)
+            _rb.linearVelocity = new Vector2(0, _moveVertical * _speed);
     }
 
 }

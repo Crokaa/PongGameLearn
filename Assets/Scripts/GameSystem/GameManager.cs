@@ -97,6 +97,10 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
+
+        _enemy.StopMovement();
+        _player.StopMovement();
+
         // They are always an image, but assigning null removes the error.
         // If by any chance there's a break it means there's not 2 Images in my canvas
         RawImage playerImage = null;

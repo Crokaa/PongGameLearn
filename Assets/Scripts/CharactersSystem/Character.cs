@@ -3,6 +3,7 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     [SerializeField] protected float _speed;
+    protected bool canMove;
     protected Rigidbody2D _rb;
     public int Score { get; private set; }
     private float _paddleHeight;
@@ -15,6 +16,7 @@ public class Character : MonoBehaviour
         _paddleHeight = GetComponent<SpriteRenderer>().size.y * transform.localScale.y;
         _paddleWidth = GetComponent<SpriteRenderer>().size.x * transform.localScale.x;
         _initialYPosition = transform.position.y;
+        canMove = true;
     }
 
     public void ScoreGoal()
@@ -24,6 +26,7 @@ public class Character : MonoBehaviour
 
     public void Reset()
     {
+        canMove = true;
         Score = 0;
         transform.position = new Vector3(transform.position.x, _initialYPosition, transform.position.z);
     }
@@ -45,4 +48,11 @@ public class Character : MonoBehaviour
 
         collision.gameObject.GetComponent<BallBehaviour>().Launch((int)transform.right.x, bounceAngle);
     }
+
+    public void StopMovement()
+    {
+        canMove = false;
+        _rb.linearVelocityY = 0;
+    }
+
 }

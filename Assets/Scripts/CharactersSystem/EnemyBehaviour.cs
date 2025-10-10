@@ -14,7 +14,7 @@ public class EnemyBehaviour : Character
 
     void Update()
     {
-        if (_ball == null || !_ball.activeSelf) return;
+        if (_ball == null || !_ball.activeSelf || !canMove) return;
 
         _ballYPos = _ball.transform.position.y;
     }
