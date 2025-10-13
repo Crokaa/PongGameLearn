@@ -55,4 +55,9 @@ public class Character : MonoBehaviour
         _rb.linearVelocityY = 0;
     }
 
+    public void ResumeMovement()
+    {
+        canMove = true;
+    }
+
 }
