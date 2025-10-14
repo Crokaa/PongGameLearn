@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI _enemyScoreText;
     private EnemyDifficulty _currentDifficulty;
     public static GameManager instance;
-    private static readonly int GOALSTOWIN = 1;
+    private static readonly int GOALSTOWIN = 7;
     void Awake()
     {
         if (instance == null)
