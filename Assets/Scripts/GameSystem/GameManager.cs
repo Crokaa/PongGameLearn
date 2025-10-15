@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Texture _loseImage;
     [SerializeField] private PlayerController _player;
     [SerializeField] private EnemyBehaviour _enemy;
+    [SerializeField] private AudioClip _inGameMusic;
     private GameState _currentGameState;
     private TextMeshProUGUI _playerScoreText;
     private TextMeshProUGUI _enemyScoreText;
@@ -58,6 +59,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator GameStart(EnemyDifficulty difficulty)
     {
+        HideCursor();
         _player.Reset();
         _enemy.Reset();
 
@@ -127,6 +129,7 @@ public class GameManager : MonoBehaviour
             enemyImage.texture = _winImage;
         }
 
+        ShowCursor();
         ShowGameOver();
     }
 
@@ -206,16 +209,18 @@ public class GameManager : MonoBehaviour
         _player.GetComponent<Character>().StopMovement();
         _enemy.GetComponent<Character>().StopMovement();
 
+        ShowCursor();
         _pauseUI.SetActive(true);
         _currentGameState= GameState.Pause;
     }
 
     private void Unpause()
     {
+        HideCursor();
         _pauseUI.SetActive(false);
         _currentGameState= GameState.InGame;
 
-        Time.timeScale = 1;
+        Time.timeScale = 1f;
         _player.GetComponent<Character>().ResumeMovement();
         _enemy.GetComponent<Character>().ResumeMovement();
     }
@@ -230,6 +235,18 @@ public class GameManager : MonoBehaviour
             else if (scoreBoardObj.name == "EnemyScore")
                 _enemyScoreText = scoreBoardObj;
         }
+    }
+
+    private void HideCursor()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
+    }
+
+    private void ShowCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     private enum GameState

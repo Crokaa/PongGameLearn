@@ -3,6 +3,7 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     [SerializeField] protected float _speed;
+    [SerializeField] protected AudioClip _hitBallSound;
     protected bool canMove;
     protected Rigidbody2D _rb;
     public int Score { get; private set; }
@@ -38,6 +39,8 @@ public class Character : MonoBehaviour
         float ballCenterXAbs = Math.Abs(collision.transform.position.x);
         float paddleCenterXAbs = Math.Abs(transform.position.x);
         if (ballCenterXAbs > paddleCenterXAbs - (_paddleWidth / 2)) return;
+
+        SoundFXManager.instance.PlaySoundFXClip(_hitBallSound, transform, 0.5f);
 
         float collisionPointY = collision.GetContact(0).point.y;
         float characterCenterY = transform.position.y;
