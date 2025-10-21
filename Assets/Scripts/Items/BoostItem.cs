@@ -12,7 +12,7 @@ public class BoostItem : MonoBehaviour
 
     void Update()
     {
-        if (_isShowing)
+        if (_isShowing && GameManager.instance.CurrentGameState == GameState.InGame)
         {
             timer += Time.deltaTime;
             if (timer >= MAXDURATION)
@@ -30,4 +30,10 @@ public class BoostItem : MonoBehaviour
         _isShowing = true;
         timer = 0.0f;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //TODO: Add boost effect to character
+    }
+
 }

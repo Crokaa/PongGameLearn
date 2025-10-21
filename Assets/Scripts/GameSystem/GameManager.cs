@@ -16,7 +16,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerController _player;
     [SerializeField] private EnemyBehaviour _enemy;
     [SerializeField] private AudioClip _inGameMusic;
-    private GameState _currentGameState;
+    [SerializeField] private GameObject _itemSpawner;
+    public GameState CurrentGameState { get; private set; }
     private TextMeshProUGUI _playerScoreText;
     private TextMeshProUGUI _enemyScoreText;
     private EnemyDifficulty _currentDifficulty;
@@ -45,9 +46,9 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (_currentGameState == GameState.InGame)
+            if (CurrentGameState == GameState.InGame)
                 Pause();
-            else if (_currentGameState == GameState.Pause)
+            else if (CurrentGameState == GameState.Pause)
                 Unpause();
         }
     }
@@ -62,6 +63,10 @@ public class GameManager : MonoBehaviour
         HideCursor();
         _player.Reset();
         _enemy.Reset();
+
+        // Activate _item spawner and set difficulty
+        _itemSpawner.SetActive(true);
+        _itemSpawner.GetComponent<ItemSpawner>().EnemyDifficultyChange(difficulty);
 
         // Even if it's the same difficulty I will update it (this isn't a heavy operation)
         _enemy.SetDifficulty(difficulty);
@@ -99,6 +104,8 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
+        //Deactivate item spawner
+        _itemSpawner.SetActive(true);
 
         _enemy.StopMovement();
         _player.StopMovement();
@@ -140,7 +147,7 @@ public class GameManager : MonoBehaviour
         _gameOverUI.SetActive(false);
         _menuUI.SetActive(true);
 
-        _currentGameState = GameState.Menu;
+        CurrentGameState = GameState.Menu;
     }
 
     private void ShowGame()
@@ -151,7 +158,7 @@ public class GameManager : MonoBehaviour
         _gameLayoutObject.SetActive(true);
         _pauseUI.SetActive(false);
 
-        _currentGameState = GameState.InGame;
+        CurrentGameState = GameState.InGame;
 
         // Since this is also part of UI it makes sense to be in this fuction
         _ball.GetComponent<BallBehaviour>().ResetBallPosition();
@@ -161,7 +168,7 @@ public class GameManager : MonoBehaviour
     private void ShowGameOver()
     {
         _gameOverUI.SetActive(true);
-        _currentGameState = GameState.GameOver;
+        CurrentGameState = GameState.GameOver;
     }
 
     private void SetOnClickMenuButtons()
@@ -211,14 +218,14 @@ public class GameManager : MonoBehaviour
 
         ShowCursor();
         _pauseUI.SetActive(true);
-        _currentGameState= GameState.Pause;
+        CurrentGameState = GameState.Pause;
     }
 
     private void Unpause()
     {
         HideCursor();
         _pauseUI.SetActive(false);
-        _currentGameState= GameState.InGame;
+        CurrentGameState = GameState.InGame;
 
         Time.timeScale = 1f;
         _player.GetComponent<Character>().ResumeMovement();
@@ -248,10 +255,9 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
+}
 
-    private enum GameState
+public enum GameState
     {
         Menu, InGame, GameOver, Pause
     }
-
-}
