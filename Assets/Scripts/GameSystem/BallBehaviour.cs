@@ -8,6 +8,7 @@ public class BallBehaviour : MonoBehaviour
     [SerializeField] private float _initialSpeed;
     private float _currentSpeed;
     public static float MAXANGLE = 45f; // Max bounce angle in degrees
+    private static readonly float BOOSTSPEED = 14f;
 
     void Awake()
     {
@@ -67,6 +68,18 @@ public class BallBehaviour : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Enemy"))
         {
+            Character character = collision.gameObject.GetComponent<Character>();
+            if (character.IsBoosted)
+            {
+                if (_currentSpeed < 15f)
+                    _currentSpeed = BOOSTSPEED;
+                else
+                    _currentSpeed += 2f; // It just increases the speed a bit more
+
+                // The boost only lasts 1 throw    
+                character.IsBoosted = false;
+            }
+
             if (_currentSpeed < 15f)
                 _currentSpeed += 0.5f;
         }

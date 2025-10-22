@@ -10,6 +10,7 @@ public class Character : MonoBehaviour
     private float _paddleHeight;
     private float _paddleWidth;
     private float _initialYPosition;
+    public bool IsBoosted { get; set; }
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -30,6 +31,7 @@ public class Character : MonoBehaviour
         canMove = true;
         Score = 0;
         transform.position = new Vector3(transform.position.x, _initialYPosition, transform.position.z);
+        IsBoosted = false;
     }
     void OnCollisionEnter2D(Collision2D collision)
     {

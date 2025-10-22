@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 
 public class ItemSpawner : MonoBehaviour
 {
@@ -11,11 +10,17 @@ public class ItemSpawner : MonoBehaviour
     private static int SPAWNCHANCE = 5;
     private static int EASYCHANCE = 3;
     private static int MEDIUMCHANCE = SPAWNCHANCE;
-    private static int HARDCHANCE = 3;
+    private static int HARDCHANCE = 10;
     private int _enemyChance = MEDIUMCHANCE;
     private BoostItem _playerItem;
     private BoostItem _enemyItem;
     private float _time;
+    private float _paddleHeight;
+    void Start()
+    {
+        // Player or enemy have the same paddle height
+        _paddleHeight = FindAnyObjectByType<Character>().transform.localScale.y;
+    }
     void Update()
     {
 
@@ -31,13 +36,11 @@ public class ItemSpawner : MonoBehaviour
 
             if (playerRandom < SPAWNCHANCE && _playerItem == null)
             {
-                Debug.Log(_time);
                 SpawnItem(_playerTransform);
             }
 
             if (enemyRandom < _enemyChance && _enemyItem == null)
             {
-                Debug.Log(_time);
                 SpawnItem(_enemyTransform);
             }
             
@@ -47,12 +50,32 @@ public class ItemSpawner : MonoBehaviour
 
     private void SpawnItem(Transform characterTransform)
     {
-        float topY = _topWallTransform.position.y;
-        float bottomY = _bottomWallTransform.position.y;
+        float topY = _topWallTransform.position.y - 0.5f;
+        float bottomY = _bottomWallTransform.position.y + 0.5f;
+        float characterY = characterTransform.position.y;
+        float characterX = characterTransform.position.x;
+        float spawnY;
+        // if anything it goes right in the center
+        Vector3 spawnPos = new Vector3(characterX, (topY + bottomY) / 2);
 
-        float spawnY = Random.Range(bottomY + 0.5f, topY - 0.5f);
-        Vector3 spawnPos = new Vector3(characterTransform.position.x, spawnY, 0);
-
+        if (characterY - _paddleHeight / 2 - 0.5f < bottomY)
+        {
+            spawnY = Random.Range(characterY + _paddleHeight / 2 + 0.5f , topY);
+            spawnPos = new Vector3(characterX, spawnY);
+        }
+        else if (characterY + _paddleHeight / 2 + 0.5f > topY)
+        {
+            spawnY = Random.Range(bottomY, characterY - _paddleHeight / 2 - 0.5f);
+            spawnPos = new Vector3(characterX, spawnY);
+        }
+        else
+        {
+            if (Random.Range(0, 2) == 0)
+                spawnY = Random.Range(bottomY, characterY - _paddleHeight / 2 - 0.5f);
+            else
+                spawnY = Random.Range(characterY - _paddleHeight / 2 + 0.5f, topY);
+            spawnPos = new Vector3(characterX, spawnY);
+        }
         BoostItem newItem = Instantiate(_itemPrefab, spawnPos, Quaternion.identity).GetComponent<BoostItem>();
 
         if (characterTransform == _playerTransform)
@@ -61,6 +84,14 @@ public class ItemSpawner : MonoBehaviour
             _enemyItem = newItem;
 
         newItem.Show();
+    }
+
+    public void ResetItems()
+    {
+        if (_playerItem != null)
+            Destroy(_playerItem.gameObject);
+        if (_enemyItem != null)
+            Destroy(_enemyItem.gameObject);
     }
 
     public void EnemyDifficultyChange(EnemyDifficulty difficulty)

@@ -1,7 +1,4 @@
-using System.Net.NetworkInformation;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class BoostItem : MonoBehaviour
 {
@@ -33,7 +30,12 @@ public class BoostItem : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //TODO: Add boost effect to character
+        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Enemy"))
+        {
+            collision.gameObject.GetComponent<Character>().IsBoosted = true;
+            gameObject.SetActive(false);
+        }
+
     }
 
 }

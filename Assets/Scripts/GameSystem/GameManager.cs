@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI _enemyScoreText;
     private EnemyDifficulty _currentDifficulty;
     public static GameManager instance;
-    private static readonly int GOALSTOWIN = 7;
+    private static readonly int GOALSTOWIN = 2;
     void Awake()
     {
         if (instance == null)
@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
 
         // Activate _item spawner and set difficulty
         _itemSpawner.SetActive(true);
+        _itemSpawner.GetComponent<ItemSpawner>().ResetItems();
         _itemSpawner.GetComponent<ItemSpawner>().EnemyDifficultyChange(difficulty);
 
         // Even if it's the same difficulty I will update it (this isn't a heavy operation)
